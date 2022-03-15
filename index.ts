@@ -14,7 +14,7 @@ const prisma = new PrismaClient({ log: ['error', 'query', 'info', 'warn'] });
 
 function createToken(id: number) {
   //@ts-ignore
-  return jwt.sign({ id }, process.env.MY_SECRET, { expiresIn: '1day' });
+  return jwt.sign({ id }, process.env.MY_SECRET, { expiresIn: '2h' });
 }
 
 async function getUserFromToken(token: string) {
