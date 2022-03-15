@@ -83,7 +83,7 @@ app.post('/login', async (req, res) => {
       throw Error('BOOM');
     }
   } catch (err) {
-    res.status(400).send({ error: 'Use or/password invalid' });
+    res.status(400).send({ error: 'Email and/or password invalid' });
   }
 });
 
