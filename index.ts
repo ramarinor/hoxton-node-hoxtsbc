@@ -20,8 +20,12 @@ function createToken(id: number) {
 async function getUserFromToken(token: string) {
   //@ts-ignore
   const decodedData = jwt.verify(token, process.env.MY_SECRET);
-  //@ts-ignore
-  const user = await prisma.user.findUnique({ where: { id: decodedData.id } });
+
+  const user = await prisma.user.findUnique({
+    //@ts-ignore
+    where: { id: decodedData.id },
+    include: { transactions: true }
+  });
   return user;
 }
 
@@ -53,13 +57,7 @@ app.post('/signup', async (req, res) => {
           ]
         }
       },
-      select: {
-        id: true,
-        email: true,
-        fullName: true,
-        amountInAccount: true,
-        transactions: true
-      }
+      include: { transactions: true }
     });
     res.send({ user, token: createToken(user.id) });
   } catch (err) {
@@ -90,7 +88,7 @@ app.post('/login', async (req, res) => {
 });
 
 app.post('/banking-info', async (req, res) => {
-  const { token } = req.body;
+  const token = req.headers.authorization || '';
 
   try {
     const user = await getUserFromToken(token);
